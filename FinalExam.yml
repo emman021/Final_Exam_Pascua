@@ -1,0 +1,28 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: Installation of updates (Ubuntu)
+    tags: always
+    apt:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Updating repository index (Centos)
+    tags: always
+    dnf:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "CentOS"
+
+- hosts: ubuntu_controller_node
+  become: true
+  roles:
+    - ubuntu
+
+- hosts: remote_server
+  become: true
+  roles:
+    - centos
